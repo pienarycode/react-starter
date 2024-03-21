@@ -1,70 +1,169 @@
-# Getting Started with Create React App
+# Project Setup without Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was created from scratch without using create-react-app package
 
-## Available Scripts
+## 1. Create a Node project
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm init -y`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This will create package.json file
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 2. Install Babel dependencies
 
-### `npm test`
+In the project directory, you can run:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `npm install --save-dev @babel/core babel-loader @babel/cli @babel/preset-env @babel/preset-react`
 
-### `npm run build`
+Babel is a compiler that converts your modern JavaScript into backward-compatible versions to be supported by older browsers or environments
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 3. Install Webpack dependencies
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+In the project directory, you can run:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm install --save-dev webpack webpack-cli webpack-dev-server`
 
-### `npm run eject`
+Webpack is a static module bundler for modern JavaScript applications. It can take different files and bundles them into a single JavaScript file
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 4. Install HtmlWebpackPlugin
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+In the project directory, you can run:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### `npm install --save-dev html-webpack-plugin`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The HtmlWebpackPlugin is the package that simplifies the creation of HTML files to serve your Webpack bundles
 
-## Learn More
+## 5. Install React dependencies
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+In the project directory, you can run:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `npm install react react-dom `
 
-### Code Splitting
+React is a JavaScript library for creating user interfaces.
+The React package itself contains only the functionality necessary to define React components therefore it is typically used together with a React renderer like react-dom to create elements for the web. react and react-dom are the main dependencies we need to actually use React in our apps
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 6. Add React files
 
-### Analyzing the Bundle Size
+create a public folder and in the created folder create an index.html file and add the following code in it
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+###
 
-### Making a Progressive Web App
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pienary Code</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 7. create an src folder and in it create an App.js file and add the following code
 
-### Advanced Configuration
+```
+import React from "react";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+export default function App() {
+  return <h1>Welcome to Pienary Code !!!</h1>;
+}
 
-### Deployment
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 8. create an index.js which will be the entry of our app in the src folder
 
-### `npm run build` fails to minify
+```
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+const container = document.getElementById("root");
+
+const root = createRoot(container);
+root.render(<App />);
+```
+
+## 9. configure Babel
+
+In the root folder create a file named .babelrc and add the following code
+
+###
+
+```
+{
+    "presets": ["@babel/preset-env","@babel/preset-react"]
+}
+```
+
+## 10. configure Webpack
+
+Create a file named webpack.config.js and add the following code
+
+###
+
+```
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+
+module.exports = {
+  entry: "./src/index.js",
+  mode: "development",
+  output: {
+    path: path.resolve(__dirname, "./dist"),
+    filename: "index_bundle.js",
+  },
+  target: "web",
+  devServer: {
+    port: "5000",
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
+    open: true,
+    hot: true,
+    liveReload: true,
+  },
+  resolve: {
+    extensions: [".js", ".jsx", ".json"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: "babel-loader",
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "public", "index.html"),
+    }),
+  ],
+};
+
+```
+
+## 11. add scripts in package.json
+
+In the package.json file in the scripts object scripts that will be used to run Webpack and start our application
+add scripts as mentioned below
+
+###
+
+```
+"scripts": {
+    "start": "webpack-dev-server .",
+    "build": "webpack ."
+  }
+```
+
+## 12. start your application
+
+Run `npm start` to start the application
+
+###

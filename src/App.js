@@ -1,9 +1,5 @@
-function App() {
-  return (
-    <div className="App">
-      <h1>Welcome to Pienary Code !!!</h1>
-    </div>
-  );
-}
+import React from "react";
 
-export default App;
+export default function App() {
+  return <h1>Welcome to Pienary Code !!!</h1>;
+}
